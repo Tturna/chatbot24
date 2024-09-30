@@ -1,0 +1,6 @@
+[submodule "Perplexica"]
+	path = Perplexica
+	url = https://github.com/ItzCrazyKns/Perplexica
+[submodule "voice-interface/whisper-realtime"]
+	path = voice-interface/whisper-realtime
+	url = https://github.com/davabase/whisper_real_time
