@@ -15,7 +15,7 @@ def get_service_error_response(data: Optional[Dict[str, Any]], status_code: int)
         error = data.get("error")
 
         if error is not None:
-            response = make_response(error)
+            response = make_response({ "error": error })
             response.status_code = status_code
             return response
         else:
@@ -23,6 +23,6 @@ def get_service_error_response(data: Optional[Dict[str, Any]], status_code: int)
     else:
         print("Data is empty")
 
-    response = make_response("Something went wrong. Data might be malformatted.")
+    response = make_response({ "error": "Something went wrong. Data might be malformatted." })
     response.status_code = status_code
     return response

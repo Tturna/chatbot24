@@ -1,8 +1,28 @@
-﻿@{
+﻿@model PromptModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    <form asp-controller="Home" asp-action="Prompt" method="post">
+        <div class="form-group">
+            <label asp-for="Prompt" class="control-label"></label>
+            <input asp-for="Prompt" class="form-control"/>
+            <span asp-validation-for="Prompt" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Send" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+<div class="text-center">
+    <p>
+        @Html.DisplayFor(model => model.Response)
+    </p>
 </div>
