@@ -1,4 +1,4 @@
-﻿@model PromptModel
+﻿@model PromptModel?
 
 @{
     ViewData["Title"] = "Home Page";
@@ -21,8 +21,12 @@
         </div>
     </form>
 </div>
+
+@if (Model?.Response != null)
+{
 <div class="text-center">
     <p>
-        @Html.DisplayFor(model => model.Response)
+    @Model.Response
     </p>
 </div>
+}
