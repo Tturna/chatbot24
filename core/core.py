@@ -3,7 +3,7 @@ from flask import Flask, make_response, request, abort
 from dotenv import load_dotenv
 import datetime
 import utils.errorhandler as errorhandler
-from utils.commands import Command
+from utils.commands import CommandType
 import services.weather as weather
 import services.perplexica as perplexica
 import services.ollama as ollama
@@ -78,21 +78,27 @@ def handle_prompt():
         response.status_code = 400
         return response
 
-    print(f"command: {command.name} ({command.value})")
+    print(f"received command: {command.command_type.name} ({command.command_type.value}), {command.parameters}")
 
     data: Optional[Dict[str, Any]] = None
-    status_code: int = 500
+    status_code = 500
 
-    match command:
-        case Command.WEATHER_CURRENT:
+    match command.command_type:
+        case CommandType.WEATHER_CURRENT:
             print("Handling current weather command...")
             status_code, data = weather.get_current_weather("Helsinki")
 
-        case Command.WEATHER_FORECAST:
+        case CommandType.WEATHER_FORECAST:
             print("Handling weather forecast command...")
-            status_code, data = weather.get_weather_forecast("Helsinki")
 
-        case Command.WEB_SEARCH:
+            days = 1
+            match command.parameters[0]:
+                case 'tomorrow':
+                    days = 2
+
+            status_code, data = weather.get_weather_forecast("Helsinki", days)
+
+        case CommandType.WEB_SEARCH:
             print("Handling web search command...")
 
             # query is validated on the service side

@@ -1,6 +1,7 @@
 from typing import Optional
 import requests
-from utils.commands import Command
+import json
+from utils.commands import Command, CommandType
 
 PROMPT_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "llama3:latest"
@@ -19,28 +20,39 @@ def send_prompt(prompt: str) -> str:
 def get_command_from_prompt(prompt: str) -> Optional[Command]:
     commands_string = ""
 
-    for command in Command:
-        commands_string += f"{command.value}. {command.name} "
+    for command in CommandType:
+        commands_string += f"{command.value}. {command.name}; "
 
-    prompt_string = (f"Answer with only a number. Which of the given commands is the best"
-                     f"match to the given prompt? The prompt might not directly reference a command."
-                     f"If none seem to match, resort to web search."
-                     f"Commands: {commands_string} Example prompt: Will it rain today? Matching"
-                     f"command: {Command.WEATHER_FORECAST.value}. Example prompt: How many legs"
-                     f"do ants have? Matching command: {Command.WEB_SEARCH.value}. Example prompt:"
-                     f"Is it cold tomorrow? Matching command: {Command.WEATHER_FORECAST.value}."
-                     f"Example prompt: what's the temperature. Matching command: {Command.WEATHER_CURRENT.value}"
+    prompt_string = (f"Answer only with a number and a parameter list. Which of the given commands is the best "
+                     f"match to the given prompt and what are the parameters? The prompt might not directly reference a command. "
+                     f"If none seem to match, resort to web search with an empty parameter list. "
+                     f"Commands: {commands_string}Example prompt: Will it rain today? Matching "
+                     f"response: {CommandType.WEATHER_FORECAST.value}, [\"today\"]. Example prompt: How many legs "
+                     f"do ants have? Matching response: {CommandType.WEB_SEARCH.value}, []. Example prompt: "
+                     f"Is it cold tomorrow? Matching response: {CommandType.WEATHER_FORECAST.value}, [\"tomorrow\"]. "
+                     f"Example prompt: what's the temperature. Matching response: {CommandType.WEATHER_CURRENT.value}, [] "
                      f"Example prompt: Nothing really matters. Resort to web search: "
-                     f"{Command.WEB_SEARCH.value}. Your turn. Prompt: {prompt}")
+                     f"{CommandType.WEB_SEARCH.value}, []. Your turn. Prompt: {prompt}")
 
-    command_number_string: str = send_prompt(prompt_string)
-    command_number = int(command_number_string.split()[0])
+    response_string: str = send_prompt(prompt_string)
+    command_args = response_string.split(', ')
+    command_number = int(command_args[0])
+    command_parameters = json.loads(command_args[1])
+    # print(f"command: {command_number} ({type(command_number)}), params: {command_parameters} ({type(command_parameters)})")
 
-    if command_number == 0 or command_number > len(Command):
+    if command_number == 0 or command_number > len(CommandType):
         return None
-    
-    for command in Command:
-        if command.value == command_number:
-            return command
 
-    return None
+    command_type = None
+    
+    for command in CommandType:
+        if command.value == command_number:
+            command_type = command
+
+    if command_type is None:
+        # print("command type: None")
+        return None
+
+    # print(f"command type: {command_type.name}")
+
+    return Command(command_type=command_type, parameters=command_parameters)

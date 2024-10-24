@@ -19,11 +19,11 @@ def get_current_weather(city: str) -> Tuple[int, Optional[Dict[str, Any]]]:
 
     return api_response.status_code, json_data
 
-def get_weather_forecast(city: str) -> Tuple[int, Optional[Dict[str, Any]]]:
+def get_weather_forecast(city: str, days: int = 1) -> Tuple[int, Optional[Dict[str, Any]]]:
     if (API_KEY is None):
         return 500, None
 
-    parameters = { "key": API_KEY, "q": city }
+    parameters = { "key": API_KEY, "q": city, "days": days }
     api_response: requests.Response = requests.get(url = API_BASE_URL + "/forecast.json", params = parameters)
 
     if not api_response.ok:
