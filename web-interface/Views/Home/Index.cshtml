@@ -6,7 +6,18 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <environment include="Development">
+        <div>Environment is Development</div>
+    </environment>
+    <environment exclude="Development">
+        <div>Environment is NOT Development</div>
+    </environment>
+    <environment include="Staging,Development,Staging_2">
+        <div>Environment is: Staging, Development or Staging_2</div>
+    </environment>
+    <environment include="Production">
+        <div>Environment is: Production</div>
+    </environment>
 </div>
 
 <div>
