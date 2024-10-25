@@ -1,8 +1,6 @@
 from typing import Any, Dict, Optional
 from flask import Response, make_response
 
-# TODO: Write a couple tests for this
-
 def check_service_error(data: Optional[Dict[str, Any]], status_code: int):
     if data is None or (status_code >= 400 and status_code <= 600):
         print("Error!")
