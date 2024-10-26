@@ -10,10 +10,10 @@ class FocusModeEnum(Enum):
     YOUTUBE_SEARCH = "youtubeSearch"
     REDDIT_SEARCH = "redditSearch"
 
-def query_internet(query: Optional[str], model: str = "llama3:latest",
+def query_internet(query: str, model: str = "llama3:latest",
                    focus_mode: FocusModeEnum = FocusModeEnum.WEB_SEARCH
                    ) -> Tuple[int, Optional[Dict[str, Any]]]:
-    if query is None:
+    if query is None or len(query) < 2:
         return 400, { "error": "Invalid or missing query" }
 
     if len(query) < 3:
