@@ -13,9 +13,6 @@ class FocusModeEnum(Enum):
 def query_internet(query: str, model: str = "llama3:latest",
                    focus_mode: FocusModeEnum = FocusModeEnum.WEB_SEARCH
                    ) -> Tuple[int, Optional[Dict[str, Any]]]:
-    if query is None or len(query) < 2:
-        return 400, { "error": "Invalid or missing query" }
-
     if len(query) < 3:
         return 400, { "error": "Query can't be less than 3 characters long" }
 
