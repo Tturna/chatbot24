@@ -1,34 +1,23 @@
-from typing import Any, Dict, Optional
-from flask import Flask, make_response, request, abort
-from dotenv import load_dotenv
+from flask import Blueprint, make_response, request, abort
 import datetime
+from typing import Optional, Dict, Any
 import utils.errorhandler as errorhandler
 from utils.commands import CommandType
 import services.weather as weather
 import services.perplexica as perplexica
 import services.ollama as ollama
 
-load_dotenv()
+bp = Blueprint("api", __name__, url_prefix="/api")
 
-app = Flask(__name__)
-
-@app.route("/")
-def index():
-    return "Access the API via /api"
-
-@app.route("/health/")
-def health_index():
-    return "ok"
-
-@app.route("/api/")
+@bp.route("/")
 def api_index():
     return "API usage instructions here"
 
-@app.route("/api/services/")
+@bp.route("/services/")
 def service_index():
     return "API service usage instructions here"
 
-@app.route("/api/services/perplexica/")
+@bp.route("/services/perplexica/")
 def perplexica_service_index():
     query = request.args.get("q")
 
@@ -43,7 +32,7 @@ def perplexica_service_index():
 
     return data
 
-@app.route("/api/services/weather/")
+@bp.route("/services/weather/")
 def weather_service_index():
     city = request.args.get("city", "Helsinki")
     status_code, data = weather.get_current_weather(city)
@@ -56,12 +45,12 @@ def weather_service_index():
 
     return data
 
-@app.route("/api/services/music/")
+@bp.route("/services/music/")
 def music_service_index():
     query = request.args.get("query", "")
     return f"<p>This is the music service. Try spotube?</p><p>You queried: {query}</p>"
 
-@app.route("/api/handle-prompt")
+@bp.route("/handle-prompt")
 def handle_prompt():
     prompt = request.args.get("p", None)
     print(f"prompt: {prompt}")
