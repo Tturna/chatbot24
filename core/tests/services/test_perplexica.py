@@ -1,4 +1,4 @@
-import services.perplexica as px
+from services.perplexica import PerplexicaService, FocusModeEnum
 import unittest
 from unittest.mock import patch, MagicMock
 from core import create_app
@@ -26,7 +26,7 @@ class TestPerplexica(unittest.TestCase):
 
         # query_internet uses requests.post to hit perplexica, so we use a mock
         # method instead with a mock response
-        status_code, response_json = px.query_internet("How many legs do ants have?")
+        status_code, response_json = PerplexicaService.query_internet("How many legs do ants have?")
 
         self.assertEqual(status_code, 200, "Should be 200")
         self.assertIsNotNone(response_json, "Response json exists")
@@ -43,8 +43,8 @@ class TestPerplexica(unittest.TestCase):
 
         query = "How many legs do ants have?"
         model = "llama3:latest"
-        focus_mode = px.FocusModeEnum.WEB_SEARCH
-        status_code, response_json = px.query_internet(query, model, focus_mode)
+        focus_mode = FocusModeEnum.WEB_SEARCH
+        status_code, response_json = PerplexicaService.query_internet(query, model, focus_mode)
 
         self.assertEqual(status_code, 200, "Should be 200")
         self.assertIsNotNone(response_json, "Response json should exist")
@@ -53,7 +53,7 @@ class TestPerplexica(unittest.TestCase):
 
     def test_query_internet_invalid_simple_query(self):
         # query_internet fails early so the Perplexica request is never sent
-        status_code, response_json = px.query_internet("a")
+        status_code, response_json = PerplexicaService.query_internet("a")
 
         self.assertEqual(status_code, 400, "Should be bad request code")
         self.assertIsNotNone(response_json, "Response json should exist")
@@ -64,8 +64,8 @@ class TestPerplexica(unittest.TestCase):
     def test_query_internet_invalid_custom_query(self):
         query = "b"
         model = "llama3:latest"
-        focus_mode = px.FocusModeEnum.WEB_SEARCH
-        status_code, response_json = px.query_internet(query, model, focus_mode)
+        focus_mode = FocusModeEnum.WEB_SEARCH
+        status_code, response_json = PerplexicaService.query_internet(query, model, focus_mode)
 
         self.assertEqual(status_code, 400, "Should be bad request code")
         self.assertIsNotNone(response_json, "Response json should exist")
@@ -82,8 +82,8 @@ class TestPerplexica(unittest.TestCase):
 
         query = "How many legs do ants have?"
         model = "llma38:latst"
-        focus_mode = px.FocusModeEnum.WEB_SEARCH
-        status_code, response_json = px.query_internet(query, model, focus_mode)
+        focus_mode = FocusModeEnum.WEB_SEARCH
+        status_code, response_json = PerplexicaService.query_internet(query, model, focus_mode)
 
         self.assertEqual(status_code, 400, "Should be 400")
         self.assertIsNotNone(response_json, "Response json should exist")
