@@ -1,11 +1,20 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using web_interface.Services;
+using web_interface.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add a typed client using IHttpClientFactory
+builder.Services.AddHttpClient<IHttpService, CoreHttpService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000");
+});
 
 var app = builder.Build();
 

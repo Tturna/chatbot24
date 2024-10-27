@@ -4,21 +4,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using web_interface.Models;
+using web_interface.Services.Interfaces;
 
 namespace web_interface.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly HttpClient httpClient;
+    private readonly IHttpService _httpService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IHttpService httpService)
     {
         _logger = logger;
-        httpClient = new()
-        {
-            BaseAddress = new System.Uri("http://localhost:5000")
-        };
+        _httpService = httpService;
     }
 
     public IActionResult Index()
@@ -43,7 +41,7 @@ public class HomeController : Controller
     {
         // "using" will automatically call Dispose() on the HttpResponseMessage object once it is
         // not used anymore (out of scope). It implements IDisposable
-        using HttpResponseMessage response = await httpClient.GetAsync($"api/handle-prompt?p={promptData.Prompt}");
+        using HttpResponseMessage response = await _httpService.GetAsync($"api/handle-prompt?p={promptData.Prompt}");
 
         var jsonData = await response.Content.ReadAsStringAsync();
         promptData.Response = jsonData;
