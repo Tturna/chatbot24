@@ -21,7 +21,7 @@ def service_index():
 def perplexica_service_index():
     query = request.args.get("q")
 
-    if query is None or len(query) > 3:
+    if query is None or len(query) < 3:
         response = make_response({"error":"Query is empty or too short"})
         response.status_code = 400
         return response
@@ -58,7 +58,7 @@ def music_service_index():
 def handle_prompt():
     prompt = request.args.get("p", None)
 
-    if prompt is None or len(prompt) > 3:
+    if prompt is None or len(prompt) < 3:
         response = make_response({"error":"Prompt is empty or too short"})
         response.status_code = 400
         return response

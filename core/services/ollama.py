@@ -8,7 +8,7 @@ class OllamaService:
     __DEFAULT_MODEL = "llama3:latest"
 
     @classmethod
-    def __send_prompt(cls, prompt: str) -> str:
+    def send_prompt(cls, prompt: str) -> str:
         body = {
             "model": cls.__DEFAULT_MODEL,
             "stream": False,
@@ -40,7 +40,7 @@ class OllamaService:
                          f"Example prompt: Nothing really matters. Resort to web search: "
                          f"{CommandType.WEB_SEARCH.value}, []. Your turn. Prompt: {prompt}")
 
-        response_string: str = cls.__send_prompt(prompt_string)
+        response_string: str = cls.send_prompt(prompt_string)
         command_args = response_string.split(', ')
         command_number = int(command_args[0])
         command_parameters = json.loads(command_args[1])
